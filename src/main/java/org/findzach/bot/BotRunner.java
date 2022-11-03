@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.findzach.bot.commands.CommandManager;
+import org.findzach.bot.eco.EconomyController;
 import org.findzach.bot.game.GameHandler;
 import org.findzach.bot.listener.ZachBotCommandMessageListener;
 import org.findzach.bot.listener.ZachBotReactionListener;
@@ -15,7 +16,7 @@ import org.findzach.bot.listener.ZachBotReactionListener;
  */
 public class BotRunner extends ListenerAdapter {
 
-    static String BOT_TOKEN = "botkey";
+    static String BOT_TOKEN = "botKey";
 
 
     public static void main(String[] args) {
@@ -29,5 +30,6 @@ public class BotRunner extends ListenerAdapter {
 
         new CommandManager();//We do not need to save the variable here as we do when the class is created
         new GameHandler();//We do not need to save the variable here as we do when the class is created
+        new EconomyController();
     }
 }

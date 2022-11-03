@@ -15,11 +15,6 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>R</id>
-            <name>repo</name>
-            <url>https://jcenter.bintray.com/</url>
-        </repository>
     </repositories>
 
 
@@ -28,8 +23,12 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_247</version>
+            <version>5.0.0-alpha.22</version>
         </dependency>
+
+
+
+
 
     </dependencies>
 

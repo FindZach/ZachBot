@@ -1,11 +1,13 @@
 package org.findzach.bot;
 
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.findzach.bot.commands.CommandManager;
+import org.findzach.bot.game.GameHandler;
+import org.findzach.bot.listener.ZachBotCommandMessageListener;
+import org.findzach.bot.listener.ZachBotReactionListener;
 
 /**
  * @author Zach S <zach@findzach.com>
@@ -13,32 +15,19 @@ import javax.security.auth.login.LoginException;
  */
 public class BotRunner extends ListenerAdapter {
 
-    public static void main(String[] args) throws LoginException {
-        String token = "MTAzNzQ0NzMwNDMyNTYyNzkwNA.GK4wM3.zGxkjxIXVWEBptRH5Xb9Ih3CO6rbfUXFQde3IY";
-        JDABuilder builder = JDABuilder.createDefault(token);
-        builder.addEventListeners(new BotRunner());
-        builder.build();
-        System.out.println("Discord Bot Running!");
-    }
+    static String BOT_TOKEN = "botkey";
 
 
-    @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public static void main(String[] args) {
+        JDABuilder bot = JDABuilder.createDefault(BOT_TOKEN, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
+                .addEventListeners(new ZachBotCommandMessageListener())
+                .addEventListeners(new ZachBotReactionListener())
+                .setActivity(Activity.of(Activity.ActivityType.STREAMING, "RuneScape"));
 
-        System.out.println("Message ToString: " + event.getMessage().getContentDisplay());
-        System.out.println("Message Raw???: " + event.getMessage().getContentRaw());
+        bot.build();
 
-        if (event.getAuthor().isBot()) {
-            return;
-        }
 
-        event.getChannel().sendMessage("gg idiot").submit();
-
-        System.out.println("least message? "+event.getChannel().getHistory().getRetrievedHistory().get(0));
-
-        if (event.getMessage().getContentRaw().equalsIgnoreCase("hi")) {
-            //event.getChannel().sendMessage("Fat nerd");
-            event.getChannel().sendMessage("gg idiots").submit();
-        }
+        new CommandManager();//We do not need to save the variable here as we do when the class is created
+        new GameHandler();//We do not need to save the variable here as we do when the class is created
     }
 }

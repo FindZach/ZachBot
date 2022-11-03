@@ -24,7 +24,7 @@ public class ZachBotCommandMessageListener extends ListenerAdapter {
         String[] args = content.split(" ");
 
         if (args.length > 0) {
-           ZachBotCommand possibleCommand = CommandManager.getCommandManager().getCommandFromKey(args[0]);
+           ZachBotCommand possibleCommand = CommandManager.getCommandManager().getCommandFromKey(args[0].toLowerCase());
            if (possibleCommand != null) {
                //Command Found, we will execute
                possibleCommand.executeCommand(event, args);

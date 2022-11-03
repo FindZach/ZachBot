@@ -1,9 +1,8 @@
 package org.findzach.bot.game.ext;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import org.findzach.bot.game.DiscordGame;
+import org.findzach.bot.game.DiscordSinglePlayerGame;
 import org.findzach.bot.game.Game;
 
 import java.util.Arrays;
@@ -15,13 +14,13 @@ import java.util.concurrent.TimeUnit;
  * @author Zach S <zach@findzach.com>
  * @since 11/2/2022
  */
-public class CoinFlip extends DiscordGame {
+public class CoinFlip extends DiscordSinglePlayerGame {
 
 
     private CoinFace selectedCoin;
 
-    public CoinFlip(JDA api, MessageChannelUnion textChannel, String contestant) {
-        super(api, textChannel, contestant);
+    public CoinFlip(JDA api, MessageChannelUnion textChannel, String contestant, double wager) {
+        super(api, textChannel, contestant, wager);
     }
 
     @Override
@@ -53,6 +52,7 @@ public class CoinFlip extends DiscordGame {
 
             CoinFace selectedFace = getRandomCoinFace(coinFlip);
             if (selectedFace == selectedCoin) {
+                setWinner(true);
                 getTextChannel().sendMessage(getContestantName() + " flipped " + selectedFace + "! WINNER!").queueAfter(2000, TimeUnit.MILLISECONDS);
             } else {
                 getTextChannel().sendMessage(getContestantName() + " flipped " + selectedFace + "! "+ getContestantName() +" is a LOSER!").queueAfter(2000, TimeUnit.MILLISECONDS);

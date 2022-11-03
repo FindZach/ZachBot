@@ -2,11 +2,12 @@ package org.findzach.bot.game;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import org.findzach.bot.eco.EconomyController;
 
-import java.sql.Time;
+import java.text.NumberFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zach S <zach@findzach.com>
@@ -14,17 +15,21 @@ import java.util.List;
  *
  * Every custom game will have this
  */
-public abstract class DiscordGame {
+public abstract class DiscordSinglePlayerGame {
 
+    private boolean winner = false;
     private MessageChannelUnion textChannel;
     private JDA api;
 
     private final String contestantId;
 
-    public DiscordGame(JDA api, MessageChannelUnion textChannel, String discordID) {
+    private final double wager;
+
+    public DiscordSinglePlayerGame(JDA api, MessageChannelUnion textChannel, String discordID, double wager) {
         this.textChannel = textChannel;
         this.api = api;
         this.contestantId = discordID;
+        this.wager = wager;
 
         startGame();
     }
@@ -59,10 +64,27 @@ public abstract class DiscordGame {
     }
 
     protected void destroyGame() {
+        if (winner) {
+            double winnings = wager * 2;
+            EconomyController.getEconomyController().getBankOptions(getContestantId()).addAmount(winnings);
+
+            Locale usa = new Locale("en", "US");
+            NumberFormat dollarFormat = NumberFormat.getCurrencyInstance(usa);
+
+            getTextChannel().sendMessage(getContestantName() + " has won " + dollarFormat.format(winnings) + " from that game!").queueAfter(3000, TimeUnit.MILLISECONDS);
+        }
         GameHandler.getGameHandler().flushGame(contestantId, getGame());
     }
 
     public String getContestantId() {
         return contestantId;
+    }
+
+    public boolean isWinner() {
+        return winner;
+    }
+
+    public void setWinner(boolean winner) {
+        this.winner = winner;
     }
 }

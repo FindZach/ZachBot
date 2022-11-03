@@ -1,5 +1,6 @@
 package org.findzach.bot.commands;
 
+import org.findzach.bot.commands.impl.BankCommand;
 import org.findzach.bot.commands.impl.GameCommand;
 import org.findzach.bot.commands.impl.PingPongCommand;
 
@@ -39,6 +40,10 @@ public class CommandManager {
     private void setCommands() {
         commandHashMap.put("!ping", new PingPongCommand());
         commandHashMap.put("!game", new GameCommand());
+        commandHashMap.put("!eco", new BankCommand());
+        commandHashMap.put("!bal", new BankCommand());
+        commandHashMap.put("!money", new BankCommand());
+        commandHashMap.put("!balance", new BankCommand());
     }
 
     public ZachBotCommand getCommandFromKey(String key) {

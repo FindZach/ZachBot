@@ -2,7 +2,7 @@ package org.findzach.bot.game.ext;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import org.findzach.bot.game.DiscordGame;
+import org.findzach.bot.game.DiscordSinglePlayerGame;
 import org.findzach.bot.game.Game;
 
 import java.util.Arrays;
@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
  * @author Zach S <zach@findzach.com>
  * @since 11/2/2022
  */
-public class OverUnder extends DiscordGame {
+public class OverUnder extends DiscordSinglePlayerGame {
 
     private OverUnderOption selectedOption;
 
-    public OverUnder(JDA api, MessageChannelUnion textChannel, String discordID) {
-        super(api, textChannel, discordID);
+    public OverUnder(JDA api, MessageChannelUnion textChannel, String discordID, double wager) {
+        super(api, textChannel, discordID, wager);
     }
 
     @Override
@@ -66,6 +66,7 @@ public class OverUnder extends DiscordGame {
             ) {
                 //Winner
                 resultText = "HUGE WINNER!";
+                setWinner(true);
             }
 
             getTextChannel().sendMessage(getContestantName() + " is a " + resultText).queueAfter(3000, TimeUnit.MILLISECONDS);

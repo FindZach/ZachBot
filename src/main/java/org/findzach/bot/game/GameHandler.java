@@ -1,6 +1,7 @@
 package org.findzach.bot.game;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.findzach.bot.eco.EconomyController;
 import org.findzach.bot.game.ext.CoinFlip;
 import org.findzach.bot.game.ext.OverUnder;
 
@@ -28,7 +29,7 @@ public class GameHandler {
 
     }
 
-    private HashMap<String, List<DiscordGame>> activeGames = new HashMap<>();
+    private HashMap<String, List<DiscordSinglePlayerGame>> activeGames = new HashMap<>();
 
 
     /**
@@ -37,10 +38,10 @@ public class GameHandler {
      * @param gameType
      * @return
      */
-    public DiscordGame getActiveGame(String UUID, Game gameType) {
+    public DiscordSinglePlayerGame getActiveGame(String UUID, Game gameType) {
         if (!activeGames.containsKey(UUID)) return null;
 
-        for(DiscordGame game: activeGames.get(UUID)) {
+        for(DiscordSinglePlayerGame game: activeGames.get(UUID)) {
             if (game.getGame() == gameType) {
                 return game;
             }
@@ -48,16 +49,16 @@ public class GameHandler {
 
         return null;
     }
-    public void startGame(MessageReceivedEvent event, Game game) {
+    public void startGame(MessageReceivedEvent event, Game game, double wager) {
 
         Logger.getAnonymousLogger().info("Attempting to start a game!");
 
         String discordUserID = event.getAuthor().getId();
-        DiscordGame discordGame = getActiveGame(discordUserID, game);
+        DiscordSinglePlayerGame discordSinglePlayerGame = getActiveGame(discordUserID, game);
 
-        if (discordGame != null) {
+        if (discordSinglePlayerGame != null) {
 
-            discordGame.sendCurrentDirections();
+            discordSinglePlayerGame.sendCurrentDirections();
             //send message telling user what to do
             //We don't want to start a game that's already started.
             return;
@@ -66,31 +67,35 @@ public class GameHandler {
         //Decide which game and do startup
         switch (game) {
             case COINFLIP:
-                discordGame = new CoinFlip(event.getJDA(), event.getChannel(), discordUserID);
+                discordSinglePlayerGame = new CoinFlip(event.getJDA(), event.getChannel(), discordUserID, wager);
                 break;
             case OVERUNDER:
-                discordGame = new OverUnder(event.getJDA(), event.getChannel(), discordUserID);
+                discordSinglePlayerGame = new OverUnder(event.getJDA(), event.getChannel(), discordUserID, wager);
                 break;
         }
 
-        if (discordGame == null) {
+        if (discordSinglePlayerGame == null) {
             Logger.getAnonymousLogger().info("No game was found!");
             return;
         }
+
+        Logger.getAnonymousLogger().info("Wagering " + wager + " on this game!");
+        if (wager > 0)
+        EconomyController.getEconomyController().getBankOptions(discordUserID).removeAmount(wager);
         
         if (activeGames.containsKey(discordUserID)) {
-            activeGames.get(discordUserID).add(discordGame);
+            activeGames.get(discordUserID).add(discordSinglePlayerGame);
         } else {
             //First game setup
-            List<DiscordGame> gameList = new ArrayList<>();
-            gameList.add(discordGame);
+            List<DiscordSinglePlayerGame> gameList = new ArrayList<>();
+            gameList.add(discordSinglePlayerGame);
             activeGames.put(discordUserID, gameList);
         }
     }
 
     public void executeGameOption(String discordUserID, String option) {
         if (activeGames.get(discordUserID) != null) {
-            for (DiscordGame game: activeGames.get(discordUserID)) {
+            for (DiscordSinglePlayerGame game: activeGames.get(discordUserID)) {
                 game.handleGameOption(option);
             }
         }
@@ -101,10 +106,10 @@ public class GameHandler {
             return;
         }
 
-        List<DiscordGame> gameList = new ArrayList<>(activeGames.get(discordUserID));
+        List<DiscordSinglePlayerGame> gameList = new ArrayList<>(activeGames.get(discordUserID));
 
         for (int i = 0; i < gameList.size(); i++) {
-            DiscordGame possibleGame = gameList.get(i);
+            DiscordSinglePlayerGame possibleGame = gameList.get(i);
             if (possibleGame.getGame() == game) {
                 gameList.remove(i);
                 Logger.getAnonymousLogger().info("Flushed a game!");

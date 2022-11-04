@@ -16,7 +16,7 @@ import org.findzach.bot.listener.ZachBotReactionListener;
  */
 public class BotRunner extends ListenerAdapter {
 
-    static String BOT_TOKEN = "botKey";
+    static String BOT_TOKEN = "MTAzNzQ0NzMwNDMyNTYyNzkwNA.GiRJQE.DhbkRt0mhKlCx9rObIJgbyVcWW0JZLbMdHm4Qk";
 
 
     public static void main(String[] args) {

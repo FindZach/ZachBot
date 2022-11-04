@@ -27,6 +27,10 @@ public class GameCommand implements ZachBotCommand {
         if (args.length > 1) {
             Game possibleGame = Game.getGameFromString(args[1]);
 
+            if (!EconomyController.getEconomyController().hasBankAccount(event.getAuthor().getId())) {
+                EconomyController.getEconomyController().createBankAccount(event.getAuthor().getId());
+            }
+
             double wager = 0;
             //Tries to detect game and start, or execute whatever is desired
             if (args.length > 2) {

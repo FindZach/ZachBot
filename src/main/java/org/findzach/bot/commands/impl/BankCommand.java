@@ -16,6 +16,14 @@ public class BankCommand implements ZachBotCommand {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
 
+                case "!powell":
+                    if (!EconomyController.getEconomyController().hasBankAccount(event.getAuthor().getId())) {
+                        EconomyController.getEconomyController().createBankAccount(event.getAuthor().getId());
+                    }
+                    event.getChannel().sendMessage("Don't worry, we print money and get away with it, heres your cut!").queue();
+                    EconomyController.getEconomyController().getBankOptions(event.getAuthor().getId()).addAmount(10000);
+                    break;
+
                 case "!money":
                 case "!bal":
                 case "!balance":

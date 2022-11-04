@@ -32,6 +32,8 @@ public class ZachBotCommandMessageListener extends ListenerAdapter {
            }
         }
 
+        System.out.println("Author: " + event.getAuthor().getId());
+        System.out.println("Message: " + content);
         GameHandler.getGameHandler().executeGameOption(event.getAuthor().getId(), content);
     }
 

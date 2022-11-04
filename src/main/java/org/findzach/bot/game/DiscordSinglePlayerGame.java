@@ -58,7 +58,12 @@ public abstract class DiscordSinglePlayerGame {
 
     public String getContestantName() {
         if (contestantName == "") {
-            this.contestantName = getApi().getUserById(contestantId).getName();
+            System.out.println("ContestantID: " + contestantId);
+            try {
+                this.contestantName = getApi().getUserById(contestantId).getName();
+            } catch (Exception e) {
+                contestantName = "The Noob";
+            }
         }
         return contestantName;
     }

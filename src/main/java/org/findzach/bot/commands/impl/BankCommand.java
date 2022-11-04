@@ -20,7 +20,7 @@ public class BankCommand implements ZachBotCommand {
                     if (!EconomyController.getEconomyController().hasBankAccount(event.getAuthor().getId())) {
                         EconomyController.getEconomyController().createBankAccount(event.getAuthor().getId());
                     }
-                    event.getChannel().sendMessage("Don't worry, we print money and get away with it, heres your cut!").queue();
+                    event.getChannel().sendMessage("Don't worry, the money printers are humming; here's your cut!").queue();
                     EconomyController.getEconomyController().getBankOptions(event.getAuthor().getId()).addAmount(10000);
                     break;
 

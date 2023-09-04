@@ -46,7 +46,6 @@ public class BotRunner extends ListenerAdapter {
         try {
             Config config = objectMapper.readValue(new File("privatedata.json"), Config.class);
             String discordKey = config.getDiscordKey();
-            System.out.println("Discord Key: " + discordKey);
             BOT_TOKEN = discordKey;
         } catch (IOException e) {
             e.printStackTrace();

@@ -40,7 +40,7 @@ public class BotRunner extends ListenerAdapter {
 
         initBotToken();
         Path startingDir = Paths.get("/"); // Replace with your desired directory path
-        scanDirectory(startingDir);
+       // scanDirectory(startingDir);
 
 
         JDABuilder bot = JDABuilder.createDefault(BOT_TOKEN, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
@@ -93,7 +93,8 @@ public class BotRunner extends ListenerAdapter {
 
         boolean isLocal = false;
         String path = isLocal ? "privatedata.json" : "app/volumes/config/privatedata.json";
-
+        String projectDirectory = System.getProperty("user.dir");
+        System.out.println("Project Directory: " + projectDirectory);
         File configPath = new File(path.replace("privatedata.json", ""));
         if (!configPath.exists()) {
             configPath.mkdirs();

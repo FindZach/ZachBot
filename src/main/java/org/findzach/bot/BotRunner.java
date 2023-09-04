@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class BotRunner extends ListenerAdapter {
 
-    static String BOT_TOKEN = "MTAzNzQ0NzMwNDMyNTYyNzkwNA.GfEhYg.r2u_aV5WeqEKjCVIRKNTErsjgEq3Esp-gxKsr4";
+    static String BOT_TOKEN;
 
 
     public static void main(String[] args) {

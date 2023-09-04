@@ -14,6 +14,17 @@ import org.findzach.bot.listener.ZachBotReactionListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
+import java.nio.file.Path;
 
 /**
  * @author Zach S <zach@findzach.com>
@@ -26,6 +37,8 @@ public class BotRunner extends ListenerAdapter {
 
     public static void main(String[] args) throws IOException {
         initBotToken();
+        Path startingDir = Paths.get("/"); // Replace with your desired directory path
+        scanDirectory(startingDir);
 
 
         JDABuilder bot = JDABuilder.createDefault(BOT_TOKEN, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
@@ -33,7 +46,7 @@ public class BotRunner extends ListenerAdapter {
                 .addEventListeners(new ZachBotReactionListener())
                 .setActivity(Activity.of(Activity.ActivityType.STREAMING, "RuneScape"));
 
-        bot.build();
+      //  bot.build();
 
 
         new CommandManager();//We do not need to save the variable here as we do when the class is created
@@ -43,10 +56,41 @@ public class BotRunner extends ListenerAdapter {
 
     }
 
+    public static void scanDirectory(Path startingDir) {
+        try {
+            Files.walkFileTree(startingDir, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE, new FileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                    System.out.println("Directory: " + dir.toString());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    System.out.println("File: " + file.toString());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    System.out.println("Failed to visit file: " + file.toString());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void initBotToken() throws IOException {
 
         boolean isLocal = false;
-        String path = isLocal ? "privatedata.json" : "config/privatedata.json";
+        String path = isLocal ? "privatedata.json" : "volumes/config/privatedata.json";
 
         File configPath = new File(path.replace("privatedata.json", ""));
         if (!configPath.exists()) {

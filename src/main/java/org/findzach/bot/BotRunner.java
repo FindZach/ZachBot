@@ -36,6 +36,8 @@ public class BotRunner extends ListenerAdapter {
 
 
     public static void main(String[] args) throws IOException {
+        System.out.println("Starting ZachBot!");
+
         initBotToken();
         Path startingDir = Paths.get("/"); // Replace with your desired directory path
         scanDirectory(startingDir);

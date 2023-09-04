@@ -92,7 +92,7 @@ public class BotRunner extends ListenerAdapter {
     public static void initBotToken() throws IOException {
 
         boolean isLocal = false;
-        String path = isLocal ? "privatedata.json" : "volumes/config/privatedata.json";
+        String path = isLocal ? "privatedata.json" : "app/volumes/config/privatedata.json";
 
         File configPath = new File(path.replace("privatedata.json", ""));
         if (!configPath.exists()) {

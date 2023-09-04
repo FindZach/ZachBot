@@ -24,8 +24,9 @@ public class BotRunner extends ListenerAdapter {
     static String BOT_TOKEN;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         initBotToken();
+
 
         JDABuilder bot = JDABuilder.createDefault(BOT_TOKEN, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
                 .addEventListeners(new ZachBotCommandMessageListener())
@@ -38,12 +39,23 @@ public class BotRunner extends ListenerAdapter {
         new CommandManager();//We do not need to save the variable here as we do when the class is created
         new GameHandler();//We do not need to save the variable here as we do when the class is created
         new EconomyController();
+
+
     }
 
-    public static void initBotToken() {
+    public static void initBotToken() throws IOException {
 
         boolean isLocal = false;
         String path = isLocal ? "privatedata.json" : "config/privatedata.json";
+
+        File configPath = new File(path.replace("privatedata.json", ""));
+        if (!configPath.exists()) {
+            configPath.mkdirs();
+        }
+        File privateData = new File(path);
+        if (!privateData.exists()) {
+            privateData.createNewFile();
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {

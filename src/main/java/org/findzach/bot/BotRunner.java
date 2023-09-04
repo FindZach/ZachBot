@@ -40,11 +40,14 @@ public class BotRunner extends ListenerAdapter {
         new EconomyController();
     }
 
-
     public static void initBotToken() {
+
+        boolean isLocal = false;
+        String path = isLocal ? "privatedata.json" : "config/privatedata.json";
+
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Config config = objectMapper.readValue(new File("privatedata.json"), Config.class);
+            Config config = objectMapper.readValue(new File(path), Config.class);
             String discordKey = config.getDiscordKey();
             BOT_TOKEN = discordKey;
         } catch (IOException e) {
